@@ -58,7 +58,7 @@ public class HiberApplication implements CommandLineRunner {
 		Book book_b = new Book("Book B", new HashSet<Publisher>() {{
 			add(publisherA);
 			add(publisherC);
-		}});sd
+		}});
 		bookRepository.save(book_a);
 		bookRepository.save(book_b);
 
