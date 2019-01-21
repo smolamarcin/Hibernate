@@ -1,13 +1,13 @@
 package com.smola.hiber.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@Entity(name = "User")
-@Table(name = "user")
+@Entity
 public class User {
     @Id
     @GeneratedValue
@@ -17,72 +17,79 @@ public class User {
     private String email;
     private String password;
 
+    @JsonManagedReference
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    @JoinTable(name = "user_route",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "route_id"))
-    private List<Route> routes = new ArrayList<>();
+    @JoinTable(name = "users_travelled_routes", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
+    private List<Route> routesTravelled = new ArrayList<>();
 
-    public void addRoute(Route route) {
-        this.routes.add(route);
-        route.getUsers().add(this);
+    @JsonManagedReference
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @JoinTable(name = "users_created_routes", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
+    private List<Route> routesCreated = new ArrayList<>();
+
+
+    public void addTravelledRoute(Route route) {
+        this.routesTravelled.add(route);
+        route.getUsersTravelled().add(this);
     }
 
-    public void removeRoute(Route route) {
-        this.routes.remove(route);
-        route.getUsers().remove(this);
+    public void removeTravelledRoute(Route route) {
+        this.routesTravelled.remove(route);
+        route.getUsersTravelled().remove(this);
+    }
+
+    public void addCreatedRoute(Route route) {
+        this.routesCreated.add(route);
+        route.getUsersCreated().add(this);
+    }
+
+    public void removeCreatedRoute(Route route) {
+        this.routesCreated.remove(route);
+        route.getUsersCreated().remove(this);
     }
 
     public User() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public List<Route> getRoutesCreated() {
+        return routesCreated;
     }
 
-    public List<Route> getRoutes() {
-        return routes;
-    }
-
-    public void setRoutes(List<Route> routes) {
-        this.routes = routes;
+    public List<Route> getRoutesTravelled() {
+        return routesTravelled;
     }
 }

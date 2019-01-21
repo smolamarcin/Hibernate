@@ -1,71 +1,91 @@
 package com.smola.hiber.model;
 
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-@Entity(name = "Route")
-@Table(name = "route")
+@Entity
 public class Route {
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
-//    private List<Coordinates> coordinates;
+    @JsonBackReference
+    @ManyToMany(mappedBy = "routesTravelled")
+    private List<User> usersTravelled = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "routes")
-    private List<User> users = new ArrayList<>();
+    @JsonBackReference
+    @ManyToMany(mappedBy = "routesCreated")
+    private List<User> usersCreated = new ArrayList<>();
+
 
     @NaturalId
     private String name;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Coordinates> coordinates = new ArrayList<>();
+
+    public Route() {
+    }
+
+    @JsonCreator
+    public Route(@JsonProperty(value = "routeName") String name,
+                 @JsonProperty(value = "coordinates") List<Coordinates> coordinates) {
+        this.name = name;
+        this.coordinates = coordinates;
+    }
 
     public Route(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
+
+    public void addCoordinates(Coordinates coordinates) {
+        this.coordinates.add(coordinates);
+        coordinates.setRoute(this);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void removeCoordinates(Coordinates coordinates) {
+        this.coordinates.remove(coordinates);
+        coordinates.setRoute(null);
     }
-    //    public Route(List<Coordinates> coordinates) {
-//        this.coordinates = coordinates;
-//    }
+
+    public void addCoordinates(Collection<Coordinates> coordinates) {
+        coordinates.forEach(this::addCoordinates);
+    }
+
+    public void removeCoordinates(Collection<Coordinates> coordinates) {
+        coordinates.forEach(this::removeCoordinates);
+    }
 
 
-
-    public Route() {
+    public List<User> getUsersTravelled() {
+        return usersTravelled;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getName() {
+        return name;
     }
 
-//    public List<Coordinates> getCoordinates() {
-//        return coordinates;
-//    }
-//
-//    public void setCoordinates(List<Coordinates> coordinates) {
-//        this.coordinates = coordinates;
-//    }
-
-
-    public List<User> getUsers() {
-        return users;
+    public List<Coordinates> getCoordinates() {
+        return coordinates;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public List<User> getUsersCreated() {
+        return usersCreated;
     }
+
 
     @Override
     public boolean equals(Object o) {

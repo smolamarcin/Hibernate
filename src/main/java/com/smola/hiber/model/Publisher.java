@@ -1,13 +1,18 @@
 package com.smola.hiber.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Publisher {
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
-    private Set<Book> books;
+
+    @ManyToMany(mappedBy = "publishers")
+    private Set<Book> books = new HashSet<>();
 
     public Publisher(){
 
@@ -22,8 +27,7 @@ public class Publisher {
         this.books = books;
     }
 
-    @Id
-    @GeneratedValue
+
     public int getId() {
         return id;
     }
@@ -40,12 +44,19 @@ public class Publisher {
         this.name = name;
     }
 
-    @ManyToMany(mappedBy = "publishers")
     public Set<Book> getBooks() {
         return books;
     }
 
     public void setBooks(Set<Book> books) {
         this.books = books;
+    }
+
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
+
+    public void removeBook(Book book) {
+        this.books.remove(book);
     }
 }

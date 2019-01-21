@@ -1,13 +1,21 @@
 package com.smola.hiber.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Book{
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
-    private Set<Publisher> publishers;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "book_publisher",
+            joinColumns = @JoinColumn(name = "book_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "publisher_id", referencedColumnName = "id"))
+    private Set<Publisher> publishers = new HashSet<>();
 
     public Book() {
 
@@ -22,8 +30,16 @@ public class Book{
         this.publishers = publishers;
     }
 
-    @Id
-    @GeneratedValue
+    public void addPublisher(Publisher publisher){
+        this.publishers.add(publisher);
+        publisher.getBooks().add(this);
+    }
+    public void removePublisher(Publisher publisher){
+        this.publishers.remove(publisher);
+        publisher.getBooks().remove(this);
+    }
+
+
     public int getId() {
         return id;
     }
@@ -40,11 +56,7 @@ public class Book{
         this.name = name;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "book_publisher",
-            joinColumns = @JoinColumn(name = "book_id",
-                    referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "publisher_id", referencedColumnName = "id"))
+
     public Set<Publisher> getPublishers() {
         return publishers;
     }
