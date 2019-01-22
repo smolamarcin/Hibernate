@@ -8,57 +8,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class User {
+public class UserSQL {
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
 
-    @JsonManagedReference
+    @JsonIgnore
+    @JsonManagedReference("a")
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     @JoinTable(name = "users_travelled_routes", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
-    private List<Route> routesTravelled = new ArrayList<>();
+    private List<RouteSQL> routesTravelled = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonIgnore
+    @JsonManagedReference("b")
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     @JoinTable(name = "users_created_routes", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
-    private List<Route> routesCreated = new ArrayList<>();
+    private List<RouteSQL> routesCreated = new ArrayList<>();
 
-    public User(String firstName) {
+    public UserSQL(String firstName) {
         this.firstName = firstName;
     }
 
 
-    public void addTravelledRoute(Route route) {
-        this.routesTravelled.add(route);
-        route.getUsersTravelled().add(this);
+    public void addTravelledRoute(RouteSQL routeSQL) {
+        this.routesTravelled.add(routeSQL);
+        routeSQL.getUsersTravelled().add(this);
     }
 
-    public void removeTravelledRoute(Route route) {
-        this.routesTravelled.remove(route);
-        route.getUsersTravelled().remove(this);
+    public void removeTravelledRoute(RouteSQL routeSQL) {
+        this.routesTravelled.remove(routeSQL);
+        routeSQL.getUsersTravelled().remove(this);
     }
 
-    public void addCreatedRoute(Route route) {
-        this.routesCreated.add(route);
-         route.getUsersCreated().add(this);
+    public void addCreatedRoute(RouteSQL routeSQL) {
+        this.routesCreated.add(routeSQL);
+         routeSQL.getUsersCreated().add(this);
     }
 
-    public void removeCreatedRoute(Route route) {
-        this.routesCreated.remove(route);
-        route.getUsersCreated().remove(this);
+    public void removeCreatedRoute(RouteSQL routeSQL) {
+        this.routesCreated.remove(routeSQL);
+        routeSQL.getUsersCreated().remove(this);
     }
 
-    public User() {
+    public UserSQL() {
     }
 
     public void setFirstName(String firstName) {
@@ -89,11 +92,31 @@ public class User {
         return password;
     }
 
-    public List<Route> getRoutesCreated() {
+    public List<RouteSQL> getRoutesCreated() {
         return routesCreated;
     }
 
-    public List<Route> getRoutesTravelled() {
+    public List<RouteSQL> getRoutesTravelled() {
         return routesTravelled;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRoutesTravelled(List<RouteSQL> routesTravelled) {
+        this.routesTravelled = routesTravelled;
+    }
+
+    public void setRoutesCreated(List<RouteSQL> routesCreated) {
+        this.routesCreated = routesCreated;
     }
 }

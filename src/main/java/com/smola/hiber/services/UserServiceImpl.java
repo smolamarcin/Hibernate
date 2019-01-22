@@ -1,15 +1,13 @@
 package com.smola.hiber.services;
 
 import com.smola.hiber.exception.UserNotFoundException;
-import com.smola.hiber.model.Route;
-import com.smola.hiber.model.User;
+import com.smola.hiber.model.RouteSQL;
+import com.smola.hiber.model.UserSQL;
 import com.smola.hiber.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,36 +19,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<User> retrieveAllUser() {
+    public Iterable<UserSQL> retrieveAllUser() {
         return this.userRepository.findAll();
     }
 
     @Override
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found!"));
+    public UserSQL findUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("UserSQL not found!"));
     }
 
     @Override
-    public Collection<Route> findRoutesCreatedByUser(Long id) {
-        User user = this.findUserById(id);
-        return user.getRoutesCreated();
+    public Collection<RouteSQL> findRoutesCreatedByUser(Long id) {
+        UserSQL userSQL = this.findUserById(id);
+        return userSQL.getRoutesCreated();
     }
 
     @Override
-    public Collection<Route> findRoutesTravelledByUser(Long id) {
-        User user = this.findUserById(id);
-        return user.getRoutesTravelled();
+    public Collection<RouteSQL> findRoutesTravelledByUser(Long id) {
+        UserSQL userSQL = this.findUserById(id);
+        return userSQL.getRoutesTravelled();
     }
 
     @Override
-    public Route updateUserRoutes(Long userId, Route route, boolean isTravelled) {
-        User user = this.findUserById(userId);
+    public RouteSQL updateUserRoutes(Long userId, RouteSQL routeSQL, boolean isTravelled) {
+        UserSQL userSQL = this.findUserById(userId);
         if (isTravelled) {
-            user.addTravelledRoute(route);
-            user.addCreatedRoute(route);
+            userSQL.addTravelledRoute(routeSQL);
+            userSQL.addCreatedRoute(routeSQL);
         } else {
-            user.addCreatedRoute(route);
+            userSQL.addCreatedRoute(routeSQL);
         }
-        return route;
+        return routeSQL;
+    }
+
+    @Override
+    public UserSQL createUser(UserSQL userSQL) {
+        return this.userRepository.save(userSQL);
     }
 }

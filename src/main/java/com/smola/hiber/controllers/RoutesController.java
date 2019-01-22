@@ -1,6 +1,6 @@
 package com.smola.hiber.controllers;
 
-import com.smola.hiber.model.Route;
+import com.smola.hiber.model.RouteSQL;
 import com.smola.hiber.services.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class RoutesController {
     }
 
     @GetMapping(value = "/routes")
-    Iterable<Route> retrieveAllRoutes(){
+    Iterable<RouteSQL> retrieveAllRoutes(){
         return this.routeService.retrieveAllRoutes();
     }
 }

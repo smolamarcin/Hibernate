@@ -2,7 +2,7 @@ package com.smola.hiber.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smola.hiber.exception.UserNotFoundException;
-import com.smola.hiber.model.User;
+import com.smola.hiber.model.UserSQL;
 import com.smola.hiber.repositories.UserRepository;
 import com.smola.hiber.services.UserService;
 import org.junit.Before;
@@ -21,16 +21,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+public class UserSQLControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,8 +39,8 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
-    private JacksonTester<Collection<User>> usersListJson;
-    private JacksonTester<Collection<User>> userJson;
+    private JacksonTester<Collection<UserSQL>> usersListJson;
+    private JacksonTester<UserSQL> userJson;
 
     @Before
     public void setUp() {
@@ -50,25 +50,25 @@ public class UserControllerTest {
     @Test
     public void shouldRetrieveAllUsers() throws Exception {
         // given
-        List<User> users = Arrays.asList(new User("Marcin"),
-                new User("Mati"),
-                new User("Kasia"));
-        when(userService.retrieveAllUser()).thenReturn(users);
+        List<UserSQL> userSQLS = Arrays.asList(new UserSQL("Marcin"),
+                new UserSQL("Mati"),
+                new UserSQL("Kasia"));
+        when(userService.retrieveAllUser()).thenReturn(userSQLS);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
+        MockHttpServletResponse response = mockMvc.perform(get("/userSQLS").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(usersListJson.write(users).getJson());
+        assertThat(response.getContentAsString()).isEqualTo(usersListJson.write(userSQLS).getJson());
     }
 
     @Test
     public void shouldReturn_Http404_whenUserDoesNotExist() throws Exception {
         // given
-        when(userService.findUserById(1L)).thenThrow(new UserNotFoundException("User not found"));
+        when(userService.findUserById(1L)).thenThrow(new UserNotFoundException("UserSQL not found"));
 
         // when
         MockHttpServletResponse response = mockMvc.perform(get("/users/1").accept(MediaType.APPLICATION_JSON))
@@ -78,5 +78,22 @@ public class UserControllerTest {
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
+    }
+    @Test
+    public void shouldCreateUser() throws Exception {
+        // given
+        UserSQL userSQL = new UserSQL();
+        userSQL.setFirstName("Marcin");
+        when(userRepository.save(userSQL)).thenReturn(userSQL);
+
+        // when
+        String json = userJson.write(userSQL).getJson();
+        MockHttpServletResponse response = mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
     }
 }

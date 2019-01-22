@@ -1,17 +1,7 @@
 package com.smola.hiber;
 
-import com.smola.hiber.model.*;
-import com.smola.hiber.repositories.BookRepository;
-import com.smola.hiber.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 @SpringBootApplication
 public class HiberApplication {
@@ -26,19 +16,19 @@ public class HiberApplication {
 //	@Override
 //	public void run(String... args) throws Exception {
 //
-//		List<Coordinates> gubalowkaRouteCoordinates = Arrays.asList(new Coordinates("59,78", "58,56"), new Coordinates("65,55", "23,55"));
-//		List<Coordinates> giewontRouteCoordinates = Arrays.asList(new Coordinates("51,78", "52,56"), new Coordinates("75,55", "24,55"));
-//		Route gubalowka = new Route("Gubalowka");
-//		Route giewont = new Route("Giewont");
-//		Route kasprowy = new Route("Kasprowy Wierch");
+//		List<CoordinatesSQL> gubalowkaRouteCoordinates = Arrays.asList(new CoordinatesSQL("59,78", "58,56"), new CoordinatesSQL("65,55", "23,55"));
+//		List<CoordinatesSQL> giewontRouteCoordinates = Arrays.asList(new CoordinatesSQL("51,78", "52,56"), new CoordinatesSQL("75,55", "24,55"));
+//		RouteSQL gubalowka = new RouteSQL("Gubalowka");
+//		RouteSQL giewont = new RouteSQL("Giewont");
+//		RouteSQL kasprowy = new RouteSQL("Kasprowy Wierch");
 //
 //		gubalowka.addCoordinates(gubalowkaRouteCoordinates);
 //		giewont.addCoordinates(giewontRouteCoordinates);
-//		User user = new User();
+//		UserSQL user = new UserSQL();
 //		user.setFirstName("Marcin");
 //		user.setLastName("Smola");
 //
-//		User mati = new User();
+//		UserSQL mati = new UserSQL();
 //		mati.setFirstName("Mateusz");
 //		mati.setLastName("Tapa");
 //

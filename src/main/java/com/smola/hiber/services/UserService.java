@@ -1,19 +1,20 @@
 package com.smola.hiber.services;
 
-import com.smola.hiber.model.Route;
-import com.smola.hiber.model.User;
+import com.smola.hiber.model.RouteSQL;
+import com.smola.hiber.model.UserSQL;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface UserService {
-    Iterable<User> retrieveAllUser();
+    Iterable<UserSQL> retrieveAllUser();
 
-    User findUserById(Long id);
+    UserSQL findUserById(Long id);
 
-    Collection<Route> findRoutesCreatedByUser(Long id);
+    Collection<RouteSQL> findRoutesCreatedByUser(Long id);
 
-    Collection<Route> findRoutesTravelledByUser(Long id);
+    Collection<RouteSQL> findRoutesTravelledByUser(Long id);
 
-    Route updateUserRoutes(Long id, Route route, boolean isTravelled);
+    RouteSQL updateUserRoutes(Long id, RouteSQL routeSQL, boolean isTravelled);
+
+    UserSQL createUser(UserSQL userSQL);
 }

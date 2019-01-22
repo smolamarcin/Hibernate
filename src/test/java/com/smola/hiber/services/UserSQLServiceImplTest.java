@@ -1,20 +1,19 @@
 package com.smola.hiber.services;
 
 import com.smola.hiber.exception.UserNotFoundException;
-import com.smola.hiber.model.User;
+import com.smola.hiber.model.UserSQL;
 import com.smola.hiber.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class UserServiceImplTest {
+public class UserSQLServiceImplTest {
     private UserServiceImpl userService;
 
     @Mock
@@ -29,15 +28,15 @@ public class UserServiceImplTest {
     @Test
     public void shouldFindUserById() {
         // given
-        User user = new User();
-        user.setFirstName("Marcin");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        UserSQL userSQL = new UserSQL();
+        userSQL.setFirstName("Marcin");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userSQL));
 
         // when
-        User userById = userService.findUserById(1L);
+        UserSQL userSQLById = userService.findUserById(1L);
 
         // then
-        assertEquals(user,userById);
+        assertEquals(userSQL, userSQLById);
     }
 
     @Test(expected = UserNotFoundException.class)

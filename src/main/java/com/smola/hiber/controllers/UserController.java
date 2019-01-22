@@ -1,14 +1,13 @@
 package com.smola.hiber.controllers;
 
-import com.smola.hiber.exception.UserNotFoundException;
-import com.smola.hiber.model.Route;
-import com.smola.hiber.model.User;
+import com.smola.hiber.model.RouteSQL;
+import com.smola.hiber.model.UserSQL;
 import com.smola.hiber.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 @RestController
 public class UserController {
@@ -20,30 +19,36 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Iterable<User> retrieveAllUsers() {
+    public Iterable<UserSQL> retrieveAllUsers() {
         return this.userService.retrieveAllUser();
     }
 
     @GetMapping("/users/{userId}")
-    public User retrieveUserById(@PathVariable Long userId){
+    public UserSQL retrieveUserById(@PathVariable Long userId){
         return this.userService.findUserById(userId);
     }
 
+    @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserSQL createUser(@RequestBody UserSQL userSQL){
+        return this.userService.createUser(userSQL);
+    }
+
+
     @GetMapping("/users/{userId}/routes/created/")
-    Collection<Route> findRoutesCreatedByUser(@PathVariable Long userId) {
+    Collection<RouteSQL> findRoutesCreatedByUser(@PathVariable Long userId) {
         return userService.findRoutesCreatedByUser(userId);
     }
 
     @GetMapping("/users/{userId}/routes/travelled/")
-    Collection<Route> findRoutesTravelledByUser(@PathVariable Long userId) {
+    Collection<RouteSQL> findRoutesTravelledByUser(@PathVariable Long userId) {
         return userService.findRoutesTravelledByUser(userId);
     }
 
     @PutMapping("/users/{userId}/routes")
-    Route updateUserRoutes(@PathVariable Long userId,
-                           @RequestParam(value = "travelled", required = false) boolean isTravelled,
-                           @RequestBody Route route) {
-        return userService.updateUserRoutes(userId, route, isTravelled);
+    RouteSQL updateUserRoutes(@PathVariable Long userId,
+                              @RequestParam(value = "travelled", required = false) boolean isTravelled,
+                              @RequestBody RouteSQL routeSQL) {
+        return userService.updateUserRoutes(userId, routeSQL, isTravelled);
     }
 
 }

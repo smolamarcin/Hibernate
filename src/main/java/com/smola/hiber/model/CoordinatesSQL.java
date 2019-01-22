@@ -1,16 +1,13 @@
 package com.smola.hiber.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Coordinates {
+public class CoordinatesSQL {
     @Id
     @GeneratedValue
     @JsonIgnore
@@ -18,23 +15,22 @@ public class Coordinates {
     private String latitude;
     private String longtitude;
 
-
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_id")
-    private Route route;
+    private RouteSQL routeSQL;
 
-    public Coordinates() {
+    public CoordinatesSQL() {
     }
 
-    public Coordinates(String latitude, String longtitude) {
+    public CoordinatesSQL(String latitude, String longtitude) {
         this.latitude = latitude;
         this.longtitude = longtitude;
     }
 
 
-    public void setRoute(Route route) {
-        this.route = route;
+    public void setRouteSQL(RouteSQL routeSQL) {
+        this.routeSQL = routeSQL;
     }
 
     public Long getId() {
@@ -49,15 +45,27 @@ public class Coordinates {
         return longtitude;
     }
 
-    public Route getRoute() {
-        return route;
+    public RouteSQL getRouteSQL() {
+        return routeSQL;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongtitude(String longtitude) {
+        this.longtitude = longtitude;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Coordinates that = (Coordinates) o;
+        CoordinatesSQL that = (CoordinatesSQL) o;
         return Objects.equals(latitude, that.latitude) &&
                 Objects.equals(longtitude, that.longtitude);
     }
