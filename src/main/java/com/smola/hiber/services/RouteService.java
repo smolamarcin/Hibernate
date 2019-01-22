@@ -6,5 +6,7 @@ import com.smola.hiber.model.User;
 import java.util.Collection;
 
 public interface RouteService {
-    Collection<Route> findRoutesCreatedByUser(User user);
+
+    Iterable<Route> retrieveAllRoutes();
+
 }

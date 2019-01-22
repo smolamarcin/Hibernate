@@ -33,6 +33,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
     private List<Route> routesCreated = new ArrayList<>();
 
+    public User(String firstName) {
+        this.firstName = firstName;
+    }
+
 
     public void addTravelledRoute(Route route) {
         this.routesTravelled.add(route);
@@ -46,7 +50,7 @@ public class User {
 
     public void addCreatedRoute(Route route) {
         this.routesCreated.add(route);
-        route.getUsersCreated().add(this);
+         route.getUsersCreated().add(this);
     }
 
     public void removeCreatedRoute(Route route) {

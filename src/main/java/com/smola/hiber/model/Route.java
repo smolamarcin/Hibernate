@@ -48,13 +48,13 @@ public class Route {
 
 
     public void addCoordinates(Coordinates coordinates) {
-        this.coordinates.add(coordinates);
         coordinates.setRoute(this);
+        this.coordinates.add(coordinates);
     }
 
     public void removeCoordinates(Coordinates coordinates) {
-        this.coordinates.remove(coordinates);
         coordinates.setRoute(null);
+        this.coordinates.remove(coordinates);
     }
 
     public void addCoordinates(Collection<Coordinates> coordinates) {

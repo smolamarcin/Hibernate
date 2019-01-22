@@ -18,8 +18,9 @@ public class RouteServiceImpl implements RouteService {
         this.routeRepository = routeRepository;
     }
 
+
     @Override
-    public Collection<Route> findRoutesCreatedByUser(User user) {
-        return null;
+    public Iterable<Route> retrieveAllRoutes() {
+        return this.routeRepository.findAll();
     }
 }
