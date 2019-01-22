@@ -1,39 +1,26 @@
 package com.smola.hiber.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
 
-import com.fasterxml.jackson.annotation.*;
-
-import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
-public class CoordinatesSQL {
+public class Coordinates {
     @Id
-    @GeneratedValue
     @JsonIgnore
-    private Long id;
+    private String id;
     private String latitude;
     private String longtitude;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "route_id")
-    private RouteSQL routeSQL;
-
-    public CoordinatesSQL() {
+    public Coordinates() {
     }
 
-    public CoordinatesSQL(String latitude, String longtitude) {
+    public Coordinates(String latitude, String longtitude) {
         this.latitude = latitude;
         this.longtitude = longtitude;
     }
 
-
-    public void setRouteSQL(RouteSQL routeSQL) {
-        this.routeSQL = routeSQL;
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -45,11 +32,8 @@ public class CoordinatesSQL {
         return longtitude;
     }
 
-    public RouteSQL getRouteSQL() {
-        return routeSQL;
-    }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -61,11 +45,12 @@ public class CoordinatesSQL {
         this.longtitude = longtitude;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CoordinatesSQL that = (CoordinatesSQL) o;
+        Coordinates that = (Coordinates) o;
         return Objects.equals(latitude, that.latitude) &&
                 Objects.equals(longtitude, that.longtitude);
     }

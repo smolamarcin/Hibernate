@@ -1,13 +1,17 @@
 package com.smola.hiber.services;
 
+import com.smola.hiber.exception.UserAlreadyExistsException;
 import com.smola.hiber.exception.UserNotFoundException;
-import com.smola.hiber.model.RouteSQL;
-import com.smola.hiber.model.UserSQL;
+import com.smola.hiber.model.Route;
+import com.smola.hiber.model.User;
 import com.smola.hiber.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,41 +23,64 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<UserSQL> retrieveAllUser() {
+    public Iterable<User> retrieveAllUser() {
         return this.userRepository.findAll();
     }
 
     @Override
-    public UserSQL findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("UserSQL not found!"));
+    public User findUserById(String id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("user not found!"));
     }
 
     @Override
-    public Collection<RouteSQL> findRoutesCreatedByUser(Long id) {
-        UserSQL userSQL = this.findUserById(id);
-        return userSQL.getRoutesCreated();
+    public Collection<Route> findRoutesCreatedByUser(String id) {
+        User user = this.findUserById(id);
+        return user.getRoutesCreated();
     }
 
     @Override
-    public Collection<RouteSQL> findRoutesTravelledByUser(Long id) {
-        UserSQL userSQL = this.findUserById(id);
-        return userSQL.getRoutesTravelled();
+    public Collection<Route> findRoutesTravelledByUser(String id) {
+        User user = this.findUserById(id);
+        return user.getRoutesTravelled();
     }
 
     @Override
-    public RouteSQL updateUserRoutes(Long userId, RouteSQL routeSQL, boolean isTravelled) {
-        UserSQL userSQL = this.findUserById(userId);
+    public Route updateUserRoutes(String userId, Route route, boolean isTravelled) {
+        User user = this.findUserById(userId);
         if (isTravelled) {
-            userSQL.addTravelledRoute(routeSQL);
-            userSQL.addCreatedRoute(routeSQL);
+            user.addTravelledRoute(route);
+            user.addCreatedRoute(route);
         } else {
-            userSQL.addCreatedRoute(routeSQL);
+            user.addCreatedRoute(route);
         }
-        return routeSQL;
+        return route;
     }
 
     @Override
-    public UserSQL createUser(UserSQL userSQL) {
-        return this.userRepository.save(userSQL);
+    public User createUser(User user) {
+        if (this.isUserExists(user)) {
+            throw new UserAlreadyExistsException("User with this email already exists!");
+        }
+        return this.userRepository.save(user);
+    }
+
+    @Override
+    public boolean isUserExists(User user) {
+        Optional<User> userRepositoryByEmail = this.userRepository.findByEmail(user.getEmail());
+        return userRepositoryByEmail.isPresent();
+    }
+
+    @Override
+    public Collection<User> retrieveUsersTravelled(String routeName) {
+        List<User> globetrotters = new ArrayList<>();
+        this.userRepository.findAll().forEach(user -> {
+            user.getRoutesTravelled().forEach(e -> {
+                if (e.getName().equalsIgnoreCase(routeName)) {
+                    globetrotters.add(user);
+                }
+            });
+        });
+        return globetrotters;
+
     }
 }

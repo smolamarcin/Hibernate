@@ -1,10 +1,12 @@
 package com.smola.hiber.controllers;
 
-import com.smola.hiber.model.RouteSQL;
-import com.smola.hiber.model.UserSQL;
+import com.smola.hiber.model.Route;
+import com.smola.hiber.model.User;
 import com.smola.hiber.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -19,36 +21,42 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Iterable<UserSQL> retrieveAllUsers() {
+    public Iterable<User> retrieveAllUsers() {
         return this.userService.retrieveAllUser();
     }
 
     @GetMapping("/users/{userId}")
-    public UserSQL retrieveUserById(@PathVariable Long userId){
+    public User retrieveUserById(@PathVariable String userId){
         return this.userService.findUserById(userId);
     }
 
     @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserSQL createUser(@RequestBody UserSQL userSQL){
-        return this.userService.createUser(userSQL);
+    public ResponseEntity<User> createUser(@RequestBody User userSQL){
+//        return ResponseEntity.created().body(this.userService.createUser(userSQL));
+        return new ResponseEntity(this.userService.createUser(userSQL), HttpStatus.CREATED);
     }
 
 
     @GetMapping("/users/{userId}/routes/created/")
-    Collection<RouteSQL> findRoutesCreatedByUser(@PathVariable Long userId) {
+    Collection<Route> findRoutesCreatedByUser(@PathVariable String userId) {
         return userService.findRoutesCreatedByUser(userId);
     }
 
     @GetMapping("/users/{userId}/routes/travelled/")
-    Collection<RouteSQL> findRoutesTravelledByUser(@PathVariable Long userId) {
+    Collection<Route> findRoutesTravelledByUser(@PathVariable String userId) {
         return userService.findRoutesTravelledByUser(userId);
     }
 
     @PutMapping("/users/{userId}/routes")
-    RouteSQL updateUserRoutes(@PathVariable Long userId,
+    Route updateUserRoutes(@PathVariable String userId,
                               @RequestParam(value = "travelled", required = false) boolean isTravelled,
-                              @RequestBody RouteSQL routeSQL) {
-        return userService.updateUserRoutes(userId, routeSQL, isTravelled);
+                              @RequestBody Route route) {
+        return userService.updateUserRoutes(userId, route, isTravelled);
+    }
+
+    @GetMapping("/users/routes/{routeName}")
+    Collection<User> retrieveUsersTravelled(@PathVariable String routeName){
+        return userService.retrieveUsersTravelled(routeName);
     }
 
 }

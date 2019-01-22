@@ -1,9 +1,9 @@
 package com.smola.hiber.repositories;
 
-import com.smola.hiber.model.CoordinatesSQL;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.smola.hiber.model.Coordinates;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CoordinatesRepository extends JpaRepository<CoordinatesSQL,Long> {
+public interface CoordinatesRepository extends MongoRepository<Coordinates,String> {
 }

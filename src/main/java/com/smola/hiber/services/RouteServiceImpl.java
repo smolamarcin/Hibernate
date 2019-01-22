@@ -1,6 +1,6 @@
 package com.smola.hiber.services;
 
-import com.smola.hiber.model.RouteSQL;
+import com.smola.hiber.model.Route;
 import com.smola.hiber.repositories.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class RouteServiceImpl implements RouteService {
 
 
     @Override
-    public Iterable<RouteSQL> retrieveAllRoutes() {
+    public Iterable<Route> retrieveAllRoutes() {
         return this.routeRepository.findAll();
     }
 }

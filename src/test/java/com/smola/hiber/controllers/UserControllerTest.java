@@ -2,7 +2,9 @@ package com.smola.hiber.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smola.hiber.exception.UserNotFoundException;
-import com.smola.hiber.model.UserSQL;
+import com.smola.hiber.model.Coordinates;
+import com.smola.hiber.model.Route;
+import com.smola.hiber.model.User;
 import com.smola.hiber.repositories.UserRepository;
 import com.smola.hiber.services.UserService;
 import org.junit.Before;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,7 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-public class UserSQLControllerTest {
+@ActiveProfiles(profiles = "test")
+public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,8 +43,9 @@ public class UserSQLControllerTest {
 
     @MockBean
     private UserRepository userRepository;
-    private JacksonTester<Collection<UserSQL>> usersListJson;
-    private JacksonTester<UserSQL> userJson;
+    private JacksonTester<Collection<User>> usersListJson;
+    private JacksonTester<User> userJson;
+    private JacksonTester<Route> routeJson;
 
     @Before
     public void setUp() {
@@ -50,25 +55,25 @@ public class UserSQLControllerTest {
     @Test
     public void shouldRetrieveAllUsers() throws Exception {
         // given
-        List<UserSQL> userSQLS = Arrays.asList(new UserSQL("Marcin"),
-                new UserSQL("Mati"),
-                new UserSQL("Kasia"));
-        when(userService.retrieveAllUser()).thenReturn(userSQLS);
+        List<User> users = Arrays.asList(new User("Marcin"),
+                new User("Mati"),
+                new User("Kasia"));
+        when(userService.retrieveAllUser()).thenReturn(users);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(get("/userSQLS").accept(MediaType.APPLICATION_JSON))
+        MockHttpServletResponse response = mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(usersListJson.write(userSQLS).getJson());
+        assertThat(response.getContentAsString()).isEqualTo(usersListJson.write(users).getJson());
     }
 
     @Test
     public void shouldReturn_Http404_whenUserDoesNotExist() throws Exception {
         // given
-        when(userService.findUserById(1L)).thenThrow(new UserNotFoundException("UserSQL not found"));
+        when(userService.findUserById("1")).thenThrow(new UserNotFoundException("UserSQL not found"));
 
         // when
         MockHttpServletResponse response = mockMvc.perform(get("/users/1").accept(MediaType.APPLICATION_JSON))
@@ -79,15 +84,16 @@ public class UserSQLControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
     }
+
     @Test
     public void shouldCreateUser() throws Exception {
         // given
-        UserSQL userSQL = new UserSQL();
-        userSQL.setFirstName("Marcin");
-        when(userRepository.save(userSQL)).thenReturn(userSQL);
+        User user = new User();
+        user.setFirstName("Marcin");
+        when(userRepository.save(user)).thenReturn(user);
 
         // when
-        String json = userJson.write(userSQL).getJson();
+        String json = userJson.write(user).getJson();
         MockHttpServletResponse response = mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andDo(print())
@@ -95,5 +101,29 @@ public class UserSQLControllerTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void shouldCreateNewRouteForUser() throws Exception {
+        // given
+        User user = new User();
+        user.setFirstName("Marcin");
+        Route gubalowka = new Route("Gubalowka");
+
+        when(userRepository.findById("1")).thenReturn(java.util.Optional.of(user));
+
+        // when
+        String requestBodyJson = routeJson.write(gubalowka).getJson();
+        MockHttpServletResponse response = mockMvc.perform(put("/users/1/routes")
+                .param("travelled", "true")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyJson))
+                .andDo(print())
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(requestBodyJson);
+
     }
 }

@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Bean;
 
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.*;
 
 import com.mongodb.MongoClient;
 
 @Configuration
+@Profile("test")
 public class MongoConfig {
     private static final String MONGO_DB_URL = "localhost";
     private static final String MONGO_DB_NAME = "embeded_db";
