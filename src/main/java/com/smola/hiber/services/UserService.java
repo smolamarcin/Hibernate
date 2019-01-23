@@ -15,11 +15,12 @@ public interface UserService {
 
     Collection<Route> findRoutesTravelledByUser(String id);
 
-    Route updateUserRoutes(String id, Route route, boolean isTravelled);
+    User updateUserRoutes(String id, Route route, boolean isTravelled);
 
     User createUser(User user);
 
     boolean isUserExists(User user);
 
     Collection<User> retrieveUsersTravelled(String routeName);
+
 }

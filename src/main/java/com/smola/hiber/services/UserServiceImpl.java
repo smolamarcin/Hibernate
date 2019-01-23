@@ -1,7 +1,7 @@
 package com.smola.hiber.services;
 
 import com.smola.hiber.exception.UserAlreadyExistsException;
-import com.smola.hiber.exception.UserNotFoundException;
+import com.smola.hiber.exception.ResourceNotFoundException;
 import com.smola.hiber.model.Route;
 import com.smola.hiber.model.User;
 import com.smola.hiber.repositories.UserRepository;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("user not found!"));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
     }
 
     @Override
@@ -45,15 +45,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Route updateUserRoutes(String userId, Route route, boolean isTravelled) {
+    public User updateUserRoutes(String userId, Route route, boolean isTravelled) {
         User user = this.findUserById(userId);
         if (isTravelled) {
             user.addTravelledRoute(route);
             user.addCreatedRoute(route);
+            user = this.userRepository.save(user);
         } else {
             user.addCreatedRoute(route);
+            user = this.userRepository.save(user);
         }
-        return route;
+        return user;
     }
 
     @Override
@@ -83,4 +85,8 @@ public class UserServiceImpl implements UserService {
         return globetrotters;
 
     }
+
+
+
+
 }

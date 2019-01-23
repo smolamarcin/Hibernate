@@ -12,8 +12,15 @@ import java.util.Date;
 @ControllerAdvice
 @RestController
 public class ExceptionController {
-    @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<Object> handleUserNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public final ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity(errorDetails, HttpStatus.NOT_FOUND);

@@ -2,9 +2,9 @@ package com.smola.hiber.model;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class User {
@@ -17,6 +17,7 @@ public class User {
     private String password;
     private Set<Route> routesTravelled = new HashSet<>();
     private Set<Route> routesCreated = new HashSet<>();
+    private Set<Route> ratedRoutes = new HashSet<>();
 
     public User() {
     }
@@ -25,24 +26,9 @@ public class User {
         this.firstName = firsName;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public void setLastName(String lastName) {
@@ -57,28 +43,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Set<Route> getRoutesTravelled() {
         return routesTravelled;
     }
 
-    public void setRoutesTravelled(Set<Route> routesTravelled) {
-        this.routesTravelled = routesTravelled;
-    }
-
     public Set<Route> getRoutesCreated() {
         return routesCreated;
-    }
-
-    public void setRoutesCreated(Set<Route> routesCreated) {
-        this.routesCreated = routesCreated;
     }
 
     @Override
@@ -102,5 +72,9 @@ public class User {
 
     public boolean addCreatedRoute(Route route) {
         return this.routesCreated.add(route);
+    }
+
+    public Set<Route> getRatedRoutes() {
+        return this.ratedRoutes;
     }
 }

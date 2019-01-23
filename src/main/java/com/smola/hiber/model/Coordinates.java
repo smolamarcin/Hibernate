@@ -20,31 +20,6 @@ public class Coordinates {
         this.longtitude = longtitude;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public String getLongtitude() {
-        return longtitude;
-    }
-
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongtitude(String longtitude) {
-        this.longtitude = longtitude;
-    }
-
 
     @Override
     public boolean equals(Object o) {

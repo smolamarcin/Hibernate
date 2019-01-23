@@ -31,9 +31,9 @@ public class UserController {
     }
 
     @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createUser(@RequestBody User userSQL){
-//        return ResponseEntity.created().body(this.userService.createUser(userSQL));
-        return new ResponseEntity(this.userService.createUser(userSQL), HttpStatus.CREATED);
+    public ResponseEntity<User> createUser(@RequestBody User user){
+//        return ResponseEntity.created().body(this.userService.createUser(user));
+        return new ResponseEntity(this.userService.createUser(user), HttpStatus.CREATED);
     }
 
 
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}/routes")
-    Route updateUserRoutes(@PathVariable String userId,
+    User updateUserRoutes(@PathVariable String userId,
                               @RequestParam(value = "travelled", required = false) boolean isTravelled,
                               @RequestBody Route route) {
         return userService.updateUserRoutes(userId, route, isTravelled);
@@ -58,5 +58,8 @@ public class UserController {
     Collection<User> retrieveUsersTravelled(@PathVariable String routeName){
         return userService.retrieveUsersTravelled(routeName);
     }
+
+
+
 
 }

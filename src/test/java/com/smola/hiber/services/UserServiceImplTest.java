@@ -1,7 +1,7 @@
 package com.smola.hiber.services;
 
 import com.smola.hiber.exception.UserAlreadyExistsException;
-import com.smola.hiber.exception.UserNotFoundException;
+import com.smola.hiber.exception.ResourceNotFoundException;
 import com.smola.hiber.model.Route;
 import com.smola.hiber.model.User;
 import com.smola.hiber.repositories.UserRepository;
@@ -46,7 +46,7 @@ public class UserServiceImplTest {
     }
 
 
-    @Test(expected = UserNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowException_whenUserDoesNotExist() {
         //given
         when(userRepository.findById("1")).thenReturn(Optional.empty());
