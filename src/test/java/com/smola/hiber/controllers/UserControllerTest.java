@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTestIT {
+public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
