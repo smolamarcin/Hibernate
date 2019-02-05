@@ -1,11 +1,14 @@
 package com.smola.hiber.services;
 
+import com.smola.hiber.exception.ExceptionMessage;
 import com.smola.hiber.exception.UserAlreadyExistsException;
 import com.smola.hiber.exception.ResourceNotFoundException;
 import com.smola.hiber.model.Route;
 import com.smola.hiber.model.User;
 import com.smola.hiber.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     private UserRepository userRepository;
 
     @Autowired
@@ -23,13 +27,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<User> retrieveAllUser() {
-        return this.userRepository.findAll();
+    public Page<User> retrieveAllUser(Pageable pageable) {
+        return this.userRepository.findAll(pageable);
     }
 
     @Override
     public User findUserById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ExceptionMessage.USER_NOT_FOUND_EXCEPTION_MESSAGE));
     }
 
     @Override
@@ -61,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         if (this.isUserExists(user)) {
-            throw new UserAlreadyExistsException("User with this email already exists!");
+            throw new UserAlreadyExistsException(ExceptionMessage.USER_EMAIL_ALREADY_EXISTS);
         }
         return this.userRepository.save(user);
     }
@@ -86,7 +90,10 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return this.userRepository.findAll(pageable);
+    }
 
 
 }

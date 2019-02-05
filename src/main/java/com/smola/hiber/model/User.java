@@ -50,6 +50,21 @@ public class User {
     public Set<Route> getRoutesCreated() {
         return routesCreated;
     }
+    public String getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -77,4 +92,6 @@ public class User {
     public Set<Route> getRatedRoutes() {
         return this.ratedRoutes;
     }
+
+
 }

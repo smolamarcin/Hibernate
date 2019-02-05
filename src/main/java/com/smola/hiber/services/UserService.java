@@ -3,11 +3,13 @@ package com.smola.hiber.services;
 
 import com.smola.hiber.model.Route;
 import com.smola.hiber.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 
 public interface UserService {
-    Iterable<User> retrieveAllUser();
+    Page<User> retrieveAllUser(Pageable pageable);
 
     User findUserById(String id);
 
@@ -23,4 +25,5 @@ public interface UserService {
 
     Collection<User> retrieveUsersTravelled(String routeName);
 
+    Page<User> findAll(Pageable pageable);
 }

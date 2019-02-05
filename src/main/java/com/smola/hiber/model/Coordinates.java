@@ -20,7 +20,6 @@ public class Coordinates {
         this.longtitude = longtitude;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

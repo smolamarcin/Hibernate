@@ -4,6 +4,8 @@ import com.smola.hiber.model.Route;
 import com.smola.hiber.services.RouteService;
 import com.smola.hiber.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,8 @@ public class RoutesController {
     }
 
     @GetMapping(value = "/routes")
-    Iterable<Route> retrieveAllRoutes() {
-        return this.routeService.retrieveAllRoutes();
+    Page<Route> retrieveAllRoutes(Pageable pageable) {
+        return this.routeService.retrieveAllRoutes(pageable);
     }
 
 

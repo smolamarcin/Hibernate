@@ -1,5 +1,6 @@
 package com.smola.hiber.controllers;
 
+import com.smola.hiber.exception.ExceptionMessage;
 import com.smola.hiber.model.Route;
 import com.smola.hiber.services.RatingService;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RatingController {
+
     private RatingService ratingService;
 
     public RatingController(RatingService ratingService) {
@@ -21,7 +23,7 @@ public class RatingController {
                                     @PathVariable String routeID,
                                     @RequestParam double rate) {
         if (this.ratingService.didUserRatedRoute(userId, routeID)) {
-            throw new RuntimeException("Rate from user already exists!");
+            throw new RuntimeException(ExceptionMessage.ALREADY_RATED_EXCEPTION_MESSAGE);
         } else {
             this.ratingService.rateRoute(userId, routeID, rate);
             return ResponseEntity.ok().build();
