@@ -4,11 +4,14 @@ import com.smola.hiber.exception.UserAlreadyExistsException;
 import com.smola.hiber.exception.ResourceNotFoundException;
 import com.smola.hiber.model.Route;
 import com.smola.hiber.model.User;
+import com.smola.hiber.repositories.RoleRepository;
 import com.smola.hiber.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,10 +28,17 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserDetailsService userDetailsService;
+
+    @Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock
+    private RoleRepository roleRepository;
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userDetailsService, userRepository, bCryptPasswordEncoder, roleRepository);
     }
 
     @Test

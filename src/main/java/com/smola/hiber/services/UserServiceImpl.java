@@ -3,27 +3,33 @@ package com.smola.hiber.services;
 import com.smola.hiber.exception.ExceptionMessage;
 import com.smola.hiber.exception.UserAlreadyExistsException;
 import com.smola.hiber.exception.ResourceNotFoundException;
+import com.smola.hiber.model.Role;
 import com.smola.hiber.model.Route;
 import com.smola.hiber.model.User;
+import com.smola.hiber.repositories.RoleRepository;
 import com.smola.hiber.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-
+    private UserDetailsService userDetailsService;
     private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserDetailsService userDetailsService, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
+        this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -67,6 +73,10 @@ public class UserServiceImpl implements UserService {
         if (this.isUserExists(user)) {
             throw new UserAlreadyExistsException(ExceptionMessage.USER_EMAIL_ALREADY_EXISTS);
         }
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setEnabled(true);
+        Role userRole = roleRepository.findByRole("USER");
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         return this.userRepository.save(user);
     }
 

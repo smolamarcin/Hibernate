@@ -34,9 +34,8 @@ public class UserController {
         return this.userService.findUserById(userId);
     }
 
-    @PutMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-//        return ResponseEntity.created().body(this.userService.createUser(user));
         return new ResponseEntity(this.userService.createUser(user), HttpStatus.CREATED);
     }
 
