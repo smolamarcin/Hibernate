@@ -26,4 +26,8 @@ public interface UserService {
     Collection<User> retrieveUsersTravelled(String routeName);
 
     Page<User> findAll(Pageable pageable);
+
+    User findUserByEmail(String email);
+
+    User findByUsername(String name);
 }

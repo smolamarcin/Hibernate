@@ -29,16 +29,13 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
-    private UserDetailsService userDetailsService;
-
-    @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Mock
     private RoleRepository roleRepository;
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userDetailsService, userRepository, bCryptPasswordEncoder, roleRepository);
+        userService = new UserServiceImpl(userRepository, bCryptPasswordEncoder, roleRepository);
     }
 
     @Test
